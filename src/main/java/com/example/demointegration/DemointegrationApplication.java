@@ -48,48 +48,4 @@ public class DemointegrationApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DemointegrationApplication.class, args);
 	}
-
-	//@Configuration
-	public class HttpInboundGatewayExample {
-
-		/*
-		 * @Bean
-		 * public TcpInboundGateway tcpInGate(AbstractServerConnectionFactory
-		 * connectionFactory) {
-		 * TcpInboundGateway inGate = new TcpInboundGateway();
-		 * inGate.setConnectionFactory(connectionFactory);
-		 * inGate.setRequestChannel(fromTcp());
-		 * return inGate;
-		 * }
-		 
-
-		@Bean
-		public TcpReceivingChannelAdapter inboundTcpAdapter(AbstractServerConnectionFactory serverConnectionFactory) {
-			TcpReceivingChannelAdapter adapter = new TcpReceivingChannelAdapter();
-			adapter.setConnectionFactory(serverConnectionFactory);
-			adapter.setOutputChannelName("fromTcp");
-			return adapter;
-		}
-
-		// @Bean
-		// public MessageChannel fromTcp1234() {
-		// 	return new DirectChannel();
-		// }
-
-		@Transformer(inputChannel = "fromTcp", outputChannel = "toEcho")
-		public String convert(byte[] bytes) {
-			return new String(bytes);
-		}
-
-		// @ServiceActivator(inputChannel = "toEcho")
-		// public String upCase(String in) {
-		// 	System.err.println(in);
-		// 	return in;
-		// }
-
-		@Bean
-		public AbstractServerConnectionFactory serverCF() {
-			return new TcpNetServerConnectionFactory(1234);
-		}*/
-	}
 }
