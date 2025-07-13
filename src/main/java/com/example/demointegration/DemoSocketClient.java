@@ -5,28 +5,43 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Scanner;
 
 public class DemoSocketClient {
 
     public static void main(String[] args) throws Exception {
-        Socket socketConnection = new Socket(InetAddress.getByName("localhost"), 1234);
-        PrintWriter writer = new PrintWriter(socketConnection.getOutputStream(), true);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socketConnection.getInputStream()));
-        String textValue = "";
-        Scanner scanner = new Scanner(System.in);
-        while (!textValue.equalsIgnoreCase("q")) {
-            System.out.print("Enter text to send: ");
-            textValue = scanner.nextLine();
-            if(textValue.equalsIgnoreCase("q")) {
-                break;
+        InetAddress address = InetAddress.getByName("localhost");
+        boolean isConnected = false;
+        do {
+            try (Socket socketConnection = new Socket(address, 1234);
+                    PrintWriter writer = new PrintWriter(socketConnection.getOutputStream(), true);
+                    BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(socketConnection.getInputStream()));
+                    Scanner scanner = new Scanner(System.in)) {
+                System.out.println("Connected with " + socketConnection.getInetAddress().getHostAddress() + ":"
+                        + socketConnection.getPort());
+                String textValue = "";
+                while (!textValue.equalsIgnoreCase("q")) {
+                    System.out.print("Enter text: ");
+                    textValue = scanner.nextLine();
+                    if (textValue.equalsIgnoreCase("q")) {
+                        break;
+                    }
+                    writer.println(textValue);
+                    System.out.println("Message from server: " + reader.readLine());
+                }
+                isConnected = true;
+                writer.close();
+                reader.close();
+                scanner.close();
+                socketConnection.close();
+            } catch (SocketException e) {
+                System.err.println("Connection Failed, Reconnecting......");
+                Thread.sleep(10000);
+                isConnected = false;
             }
-            writer.println(textValue);
-            System.out.println(reader.readLine());
-        }
-        scanner.close();
-        reader.close();
-        writer.close();
-        socketConnection.close();
+        } while (!isConnected);
+
     }
 }
